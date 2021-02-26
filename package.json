@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "jwks-rsa": "^1.12.2"
+  }
+}
