@@ -16,21 +16,21 @@ export class TodoAccess {
 
   constructor(
     private readonly docClient: DocumentClient = createDynamoDBClient(),
-    private readonly TodosTable = process.env.TodoS_TABLE) {
-  }
+    private readonly todosTable = process.env.TODOS_TABLE,
+    private readonly userIdIndex = process.env.TODOS_USER_ID_INDEX
+  ) {}
 
   async getAllTodos(userId: string): Promise<TodoItem[]> {
-    logger.info('Getting all Todos')
+    logger.info('getAllTodos', { todosTable: this.todosTable})
+
 
     const result = await this.docClient.query({
-      TableName: this.TodosTable,
-      KeyConditionExpression: "#todoId = :todoId",
-      ExpressionAttributeNames:{
-          "#yr": "todoId"
-      },
+      TableName: this.todosTable,
+      IndexName: this.userIdIndex,   
+      KeyConditionExpression: 'userId = :userId',
       ExpressionAttributeValues: {
-          ":yyyy": userId
-      }  
+        ':userId': userId
+      } 
     }).promise()
 
     const items = result.Items
@@ -39,7 +39,7 @@ export class TodoAccess {
 
   async createTodo(todoItem: TodoItem): Promise<TodoItem> {
     await this.docClient.put({
-      TableName: this.TodosTable,
+      TableName: this.todosTable,
       Item: todoItem
     }).promise()        
 
@@ -48,7 +48,7 @@ export class TodoAccess {
 
   async updateTodo(todoItem: TodoUpdate): Promise<TodoUpdate> {
     await this.docClient.put({
-      TableName: this.TodosTable,
+      TableName: this.todosTable,
       Item: todoItem
     }).promise()        
 
@@ -56,13 +56,16 @@ export class TodoAccess {
   }
 
   async deleteTodo(todoItem: TodoDelete): Promise<TodoDelete> {
-    
-    await this.docClient.delete ({
-      TableName: this.TodosTable,
-      Key: { todoItem: todoItem.todoId              }
-    }).promise()        
-
-    return { todoId: todoItem.todoId, userId: todoItem.userId   }
+    try {
+      await this.docClient.delete ({
+        TableName: this.todosTable,
+        Key: { todoItem: todoItem.todoId }
+      }).promise()        
+      return { todoId: todoItem.todoId, userId: todoItem.userId }
+    } catch(err) {
+      logger.error("deleteTodo", { err })
+      return
+    }
   }
 
 }

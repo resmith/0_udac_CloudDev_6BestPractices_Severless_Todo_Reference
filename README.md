@@ -4,7 +4,17 @@
 
 This project is to create a todo application utilizing Serverless, AWS Lambda, Dynamod Db and S3 for the Udacity Cloud Developer - Section 6 Best Practices Project
 
-## Installation
+# Overview
+
+This application uses the [Serverless Framework](https://www.serverless.com/). The ...serverless.yml files have been split into two parts for efficiency:
+1 - /backend/infrastructure/serverless.yml
+2 - /backend/serverless.yml
+
+The infrastructure serverless.yml contains the DynamoDb tables and S3 Buckets. The backend/serverless.yml contains the Lamda functions and API gateway.
+
+This split was made because the infrastructure components (DynamoDb and S3), are relatively stable with less frequent updates. The lambda functions in contrast, change more frequently. This removes the redeployment of infrastructure needlessly when their are code only changes. In addition, before the split when there were frequent updates, the delete of infrastructure would not complete before the creation of that same infrastructure (todos table for example), resulting in frequent errors. This split results in faster and more stable code deployments.
+
+## Installation - Backend
 
 - The back-end services are already installed. This req
 
@@ -14,6 +24,23 @@ cd <clonedDirectory>
 cd client
 npm install
 npm run start
+```
+
+## Installation - Front-end
+
+Update client/src/config.ts with the endpoints from the _sls deploy_
+
+```
+const apiId = '...'     // get from back-end sls deploy info
+export const apiEndpoint = `https://${apiId}.execute-api.us-west-2.amazonaws.com/dev`
+
+export const authConfig = {
+  // TODO: Create an Auth0 application and copy values from it into this map
+  domain: 'xyz.us.auth0.com',            // Auth0 domain
+  clientId: 'ghi',                     // Auth0 client id
+  callbackUrl: 'http://localhost:3000/callback'
+}
+
 ```
 
 # Functionality of the application

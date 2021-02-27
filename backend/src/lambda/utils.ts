@@ -1,5 +1,8 @@
 import { APIGatewayProxyEvent } from "aws-lambda";
 import { parseUserId } from "../auth/utils";
+import { createLogger } from  "../utils/logger"
+
+const logger = createLogger('todo-access')
 
 /**
  * Get a user id from an API Gateway event
@@ -9,8 +12,11 @@ import { parseUserId } from "../auth/utils";
  */
 export function getUserId(event: APIGatewayProxyEvent): string {
   const authorization = event.headers.Authorization
+  logger.info("backend/src/lambda/utils/getUserId ", { authorization }) 
+
   const split = authorization.split(' ')
   const jwtToken = split[1]
+  logger.info("backend/src/lambda/utils/getUserId ", { jwtToken }) 
 
   return parseUserId(jwtToken)
 }
