@@ -11,7 +11,8 @@ import {
   Icon,
   Input,
   Image,
-  Loader
+  Loader,
+  Message
 } from 'semantic-ui-react'
 
 import { createTodo, deleteTodo, getTodos, patchTodo } from '../api/todos-api'
@@ -91,7 +92,12 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
 
   async componentDidMount() {
     try {
+      console.log("Todos componentDidMount this.props: ", this.props)
+      console.log("Todos componentDidMount getIdToken()", this.props.auth.getIdToken())
+      
       const todos = await getTodos(this.props.auth.getIdToken())
+      console.log("Todos componentDidMount todos", todos)
+
       this.setState({
         todos,
         loadingTodos: false
@@ -143,7 +149,17 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
       return this.renderLoading()
     }
 
-    return this.renderTodosList()
+    console.log("Todos/renderTodos: this.state: ",this.state );
+    if (this.state.todos) {
+      return this.renderTodosList()
+    } else {
+      return (
+        <Message info>
+           <p>No todos yet</p>
+        </Message>
+    )
+    }
+
   }
 
   renderLoading() {
@@ -159,6 +175,7 @@ export class Todos extends React.PureComponent<TodosProps, TodosState> {
   renderTodosList() {
     return (
       <Grid padded>
+
         {this.state.todos.map((todo, pos) => {
           return (
             <Grid.Row key={todo.todoId}>

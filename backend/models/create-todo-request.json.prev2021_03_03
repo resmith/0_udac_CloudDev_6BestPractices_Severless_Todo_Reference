@@ -2,10 +2,6 @@
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "todo",
     "type": "object",
-    "required": [
-      "name",
-      "dueDate"
-    ],
     "properties": {
       "todoId": {
         "type": "string"
@@ -29,6 +25,12 @@
         "type": "string"
       }
     },
+    "required": [
+      "todoId",
+      "createdAt",
+      "userId",
+      "name"
+    ],
     "additionalProperties": false
   }
   

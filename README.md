@@ -14,6 +14,8 @@ The infrastructure serverless.yml contains the DynamoDb tables and S3 Buckets. T
 
 This split was made because the infrastructure components (DynamoDb and S3), are relatively stable with less frequent updates. The lambda functions in contrast, change more frequently. This removes the redeployment of infrastructure needlessly when their are code only changes. In addition, before the split when there were frequent updates, the delete of infrastructure would not complete before the creation of that same infrastructure (todos table for example), resulting in frequent errors. This split results in faster and more stable code deployments.
 
+_Note_: There are several logs written in the code. Normally these would be removed before going to production, but they were left in the code so anyone utilizing this code can see the events and data to better understand how the Serverless code works, especially concerining authentication.
+
 ## Installation - Backend
 
 - The back-end services are already installed. This req
@@ -56,6 +58,69 @@ This application allows creating, viewing and deleting Todo Items. It also allow
 - AWS S3
 - Auth0
   - JWT Tokens including verification, retrie
+
+# Authorization / JWT
+
+Authhorization is one of the trickier parts of developing this serverless application. For obtaining the public certificate used for validating the signature key there are two options:
+
+1. Copying the certificate to a .pem file
+2. Getting the certificate online from Auth0 jwksUrl. For example, from: 'https://dev-XYZ123.us.auth0.com/.well-known/jwks.json'
+
+For this project, using a .pem file was chosen for simplicity reasons. Using a .pem file requires one less dependency across the network.
+
+## #1) Using a .pem file for the certificate
+
+backend/serverless.yml
+
+```
+  environment:
+    AUTH0_PUBLIC_KEY: ${file(secret.pem)}
+
+```
+
+Go to Auth0 / application / Advanced Settings. Copy the certificate to the secret.pem file.
+
+## #2)
+
+```
+function getSigningKey(jwksUri: string, kid: string): string {
+  let signingKey: string;
+
+  const client = jwksClient({
+    jwksUri: jwksUri,
+    requestHeaders: {}, // Optional
+    requestAgentOptions: {}, // Optional
+    timeout: 30000, // Defaults to 30s
+    cache: true,
+    cacheMaxEntries: 5, // Default value
+    cacheMaxAge: ms('10h'), // Default value
+    rateLimit: true,
+    jwksRequestsPerMinute: 10, // Default value
+  });
+
+
+  client.getSigningKey(kid, (err, key) => {
+    if (!err) {
+      signingKey = key.publicKey;
+    } else
+    {
+      logger.info("getSigningKey ", { err })
+    }
+  });
+
+  logger.info("getSigningKey ", { signingKey })
+
+  return signingKey
+}
+
+```
+
+### Sources
+
+[Serverless example Auth0](https://github.com/serverless/examples/tree/master/aws-node-auth0-custom-authorizers-api)
+[auth jwks-rsa](https://github.com/auth0/node-jwks-rsa)
+[npmjs jwks-rsa](https://www.npmjs.com/package/jwks-rsa)
+[StackOverflow] (https://stackoverflow.com/questions/64275263/how-to-get-public-key-from-getsigningkey-function-of-jwks-rsa)
 
 # TODO items
 

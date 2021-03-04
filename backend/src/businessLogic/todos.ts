@@ -7,6 +7,10 @@ import { DeleteTodoRequest } from '../requests/DeleteTodoRequest'
 import { UpdateTodoRequest } from '../requests/UpdateTodoRequest'
 import { parseUserId } from '../auth/utils'
 
+import { createLogger } from '../utils/logger'
+
+const logger = createLogger('businessLogic/createTodo')
+
 const todoAccess = new TodoAccess()
 
 export async function getAllTodos(userId): Promise<TodoItem[]> {
@@ -20,6 +24,7 @@ export async function createTodo(
 
   const itemId = uuid.v4()
   const userId = parseUserId(jwtToken)
+  logger.info('userId', userId)  
 
   return await todoAccess.createTodo({
     userId: userId,

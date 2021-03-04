@@ -22,7 +22,7 @@ provider:
     apiGateway: true
   environment:
     TODOS_TABLE: Todos-${self:provider.stage}
-    TODOS_INDEX: TodosIndex-${self:provider.stage}    
+    TODOS_INDEX: Todos-UserIndex-${self:provider.stage}
     IMAGES_TABLE: Todos-Images-${self:provider.stage}
     IMAGE_ID_INDEX: ImageIdIndex
     SIGNED_URL_EXPIRATION: 300
@@ -71,25 +71,29 @@ resources:
     TodosTable:
       Type: AWS::DynamoDB::Table
       Properties:
+        TableName: ${self:provider.environment.TODOS_TABLE}
         AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S  
+          - AttributeName: createdAt
+            AttributeType: S
           - AttributeName: todoId
-            AttributeType: S
-          - AttributeName: userId
-            AttributeType: S
+            AttributeType: S              
         KeySchema:
-          - AttributeName: todoId 
-            KeyType: HASH
           - AttributeName: userId
+            KeyType: HASH           
+          - AttributeName: todoId
             KeyType: RANGE            
         BillingMode: PAY_PER_REQUEST
-        TableName: ${self:provider.environment.TODOS_TABLE}
-        GlobalSecondaryIndexes:
+        LocalSecondaryIndexes:
           - IndexName: ${self:provider.environment.TODOS_INDEX}
             KeySchema:
             - AttributeName: userId
               KeyType: HASH
+            - AttributeName: createdAt
+              KeyType: RANGE              
             Projection:
-              ProjectionType: ALL        
+              ProjectionType: ALL
 
     ImagesTable:
       Type: "AWS::DynamoDB::Table"

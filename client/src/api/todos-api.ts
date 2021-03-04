@@ -5,7 +5,7 @@ import Axios from 'axios'
 import { UpdateTodoRequest } from '../types/UpdateTodoRequest';
 
 export async function getTodos(idToken: string): Promise<Todo[]> {
-  console.log('Fetching todos')
+  console.log('todos-api getTodos Fetching todos')
 
   const response = await Axios.get(`${apiEndpoint}/todos`, {
     headers: {
@@ -13,20 +13,30 @@ export async function getTodos(idToken: string): Promise<Todo[]> {
       'Authorization': `Bearer ${idToken}`
     },
   })
-  console.log('Todos:', response.data)
-  return response.data.items
+  console.log('todos-api getTodos response.data:', response.data)
+  return response.data.todos
 }
 
 export async function createTodo(
   idToken: string,
   newTodo: CreateTodoRequest
 ): Promise<Todo> {
-  const response = await Axios.post(`${apiEndpoint}/todos`,  JSON.stringify(newTodo), {
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${idToken}`
-    }
-  })
+  let response: any;
+  console.log('createTodo apiEndpoint:', apiEndpoint)
+  console.log('createTodo newTodo:', newTodo)
+  try {    
+    response = await Axios.post(`${apiEndpoint}/todos`,  JSON.stringify(newTodo), {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${idToken}`
+      }
+    })
+  } catch (err) {
+    console.log('createTodo err:', err)     
+  } finally {
+    console.log('createTodo response:', response)  
+  }
+
   return response.data.item
 }
 

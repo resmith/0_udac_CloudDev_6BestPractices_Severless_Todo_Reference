@@ -17,7 +17,7 @@ export class TodoAccess {
   constructor(
     private readonly docClient: DocumentClient = createDynamoDBClient(),
     private readonly todosTable = process.env.TODOS_TABLE,
-    private readonly userIdIndex = process.env.TODOS_USER_ID_INDEX
+    private readonly todosUserIdIndex = process.env.TODOS_USER_ID_INDEX
   ) {}
 
   async getAllTodos(userId: string): Promise<TodoItem[]> {
@@ -26,7 +26,7 @@ export class TodoAccess {
 
     const result = await this.docClient.query({
       TableName: this.todosTable,
-      IndexName: this.userIdIndex,   
+      IndexName: this.todosUserIdIndex,
       KeyConditionExpression: 'userId = :userId',
       ExpressionAttributeValues: {
         ':userId': userId

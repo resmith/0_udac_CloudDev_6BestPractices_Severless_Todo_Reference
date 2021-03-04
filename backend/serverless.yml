@@ -28,6 +28,8 @@ provider:
     IMAGE_ID_INDEX: ImageIdIndex
     SIGNED_URL_EXPIRATION: 300
     IMAGES_S3_BUCKET: rsmith-serverless-todos-images-${self:provider.stage}
+    AUTH0_PUBLIC_KEY: ${file(secret.pem)}
+    DEBUG: 'jwks'
 
   iamRoleStatements:
     - Effect: Allow
@@ -74,7 +76,12 @@ functions:
       - http:
           method: get
           path: todos
-          cors: true
+          authorizer: Auth
+          cors: 
+          origin: '*'
+          headers:
+           - Access-Control-Allow-Credentials
+           - Z-Client-Timezone
     iamRoleStatements:
       - Effect: Allow
         Action:

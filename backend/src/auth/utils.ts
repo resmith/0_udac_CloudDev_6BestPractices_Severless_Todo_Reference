@@ -11,10 +11,10 @@ const logger = createLogger('backend/src/auth/utils/logger')
  * @returns a user id from the JWT token
  */
 export function parseUserId(jwtToken: string): string {
-  logger.info("parms: ", { jwtToken })
+  logger.info("parseUserId : ", { jwtToken })
 
   const decodedJwt = decode(jwtToken) as JwtPayload
-  logger.info("decoded: ", { decodedJwt })
+  logger.info("parseUserId: ", { decodedJwt })
 
   return decodedJwt.sub
 }
