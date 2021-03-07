@@ -9,12 +9,16 @@ import { parseUserId } from '../auth/utils'
 
 import { createLogger } from '../utils/logger'
 
-const logger = createLogger('businessLogic/createTodo')
+const logger = createLogger('businessLogic/todos')
 
 const todoAccess = new TodoAccess()
 
 export async function getAllTodos(userId): Promise<TodoItem[]> {
   return todoAccess.getAllTodos(userId)
+}
+
+export async function getTodo(userId): Promise<TodoItem> {
+  return todoAccess.getTodo(userId)
 }
 
 export async function createTodo(
@@ -24,7 +28,7 @@ export async function createTodo(
 
   const itemId = uuid.v4()
   const userId = parseUserId(jwtToken)
-  logger.info('userId', userId)  
+  logger.info('createTodo', userId)  
 
   return await todoAccess.createTodo({
     userId: userId,
@@ -41,23 +45,30 @@ export async function updateTodo(
   updateTodoRequest: UpdateTodoRequest,
   jwtToken: string
 ): Promise<UpdateTodoRequest> {
+  logger.info('updateTodo updateTodoRequest: ', { updateTodoRequest} )  
 
   const userId: string = parseUserId(jwtToken)
+  logger.info('updateTodo userId:', {userId: userId} )  
+  
+  const updatedTodoRequest = {
+    ...updateTodoRequest,
+    userId,
+    updatedAt: new Date().toISOString(),
+  }
+  logger.info('updateTodo updatedTodoRequest:', updatedTodoRequest)  
 
-  // TODO: Get the userid from the record then check
-  if (updateTodoRequest.userId !== userId)
-     return;
-
-  return await todoAccess.updateTodo(updateTodoRequest)
+  return await todoAccess.updateTodo(updatedTodoRequest)
 }
 
 export async function deleteTodo(
   deleteTodoRequest: DeleteTodoRequest,
   jwtToken: string
 ): Promise<DeleteTodoRequest> {
+  logger.info('deleteTodo', deleteTodoRequest) 
 
   const todoId = deleteTodoRequest.todoId
   const userId = parseUserId(jwtToken)
+  logger.info('deleteTodo', userId) 
 
   return await todoAccess.deleteTodo({
     todoId: todoId,

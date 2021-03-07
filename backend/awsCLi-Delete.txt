@@ -1,0 +1,8 @@
+aws dynamodb delete-item \
+    --table-name NameOfTheTable \
+    --key '{"id": {"S": "123"}, "email": {"S": "john@doe.com"}}'
+
+
+aws dynamodb delete-item \
+    --table-name "Todos-dev" \
+    --key '{"userId": {"S": "auth0|603943ecd72c7f0070477fbb"}, "todoId": {"S": "8255d2ef-08c8-4f4b-9486-43542ac28ae3"}}'    

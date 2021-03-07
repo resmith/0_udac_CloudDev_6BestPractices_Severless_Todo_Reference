@@ -3,12 +3,6 @@
   "title": "todo",
   "type": "object",
   "properties": {
-    "todoId": {
-      "type": "string"
-    },
-    "updatedAt": {
-      "type": "string"
-    },
     "name": {
       "type": "string"
     },
@@ -20,8 +14,7 @@
     }
   },
   "required": [
-    "todoId",
-    "updatedAt" 
+    "name"
   ],
   "additionalProperties": false
 }

@@ -75,17 +75,17 @@ resources:
         AttributeDefinitions:
           - AttributeName: userId
             AttributeType: S  
-          - AttributeName: createdAt
-            AttributeType: S
           - AttributeName: todoId
             AttributeType: S              
+          - AttributeName: createdAt
+            AttributeType: S
         KeySchema:
           - AttributeName: userId
             KeyType: HASH           
           - AttributeName: todoId
             KeyType: RANGE            
         BillingMode: PAY_PER_REQUEST
-        LocalSecondaryIndexes:
+        GlobalSecondaryIndexes:
           - IndexName: ${self:provider.environment.TODOS_INDEX}
             KeySchema:
             - AttributeName: userId

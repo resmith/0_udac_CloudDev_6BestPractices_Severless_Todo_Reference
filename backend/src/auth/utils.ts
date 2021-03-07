@@ -3,7 +3,7 @@ import { decode } from 'jsonwebtoken'
 import { JwtPayload } from './JwtPayload'
 import { createLogger } from  "../utils/logger"
 
-const logger = createLogger('backend/src/auth/utils/logger')
+const logger = createLogger('backend/src/auth/utils')
 
 /**
  * Parse a JWT token and return a user id
