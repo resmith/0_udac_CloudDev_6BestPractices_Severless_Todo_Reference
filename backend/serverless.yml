@@ -87,22 +87,13 @@ functions:
     handler: src/lambda/auth/auth0Authorizer.handler
 
   GetTodo:
-    handler: src/lambda/http/getTodos.handler
+    handler: src/lambda/http/getTodo.handler
     events:
       - http:
           method: get
-          path: todoit/{todoId}
+          path: todos/{todoId}
           authorizer: Auth
-          cors: 
-            origin: '*'
-            headers:
-              - Access-Control-Allow-Credentials
-              - Z-Client-Timezone   
-          documentation:
-            summary: Get a ToDo item
-            description: Get a ToDo item
-            requestModels:
-              'application/json': TodoItem                 
+          cors: true 
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -117,11 +108,7 @@ functions:
           method: get
           path: todos
           authorizer: Auth
-          cors: 
-            origin: '*'
-            headers:
-              - Access-Control-Allow-Credentials
-              - Z-Client-Timezone  
+          cors: true
           documentation:
             summary: Get ToDos for the user
             description: Get ToDos for the user
@@ -130,29 +117,22 @@ functions:
     iamRoleStatements:
       - Effect: Allow
         Action:
-          - dynamodb:Scan        
           - dynamodb:Query
           - dynamodb:GetItem          
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
       - Effect: Allow
         Action:
-          - dynamodb:Scan        
           - dynamodb:Query
           - dynamodb:GetItem  
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}/index/${self:provider.environment.TODOS_INDEX}
 
-  # TODO: Configure this function
   CreateTodo:
     handler: src/lambda/http/createTodo.handler
     events:
       - http:
           method: post
           path: todos
-          cors: 
-            origin: '*'
-            headers:
-              - Access-Control-Allow-Credentials
-              - Z-Client-Timezone  
+          cors: true  
           reqValidatorName: RequestBodyValidator
           documentation:
             summary: Create a new group
@@ -165,18 +145,13 @@ functions:
         - dynamodb:PutItem
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
 
-  # TODO: Configure this function
   UpdateTodo:
     handler: src/lambda/http/updateTodo.handler
     events:
       - http:
           method: patch
           path: todos/{todoId}
-          cors: 
-            origin: '*'
-            headers:
-              - Access-Control-Allow-Credentials
-              - Z-Client-Timezone          
+          cors: true         
           reqValidatorName: RequestBodyValidator
           documentation:
             summary: Update a Todo list item
@@ -190,49 +165,47 @@ functions:
           - dynamodb:PutItem
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
 
-  # TODO: Configure this function
   DeleteTodo:
     handler: src/lambda/http/deleteTodo.handler
     events:
       - http:
           method: delete
           path: todos/{todoId}
-          cors: 
-            origin: '*'
-            headers:
-              - Access-Control-Allow-Credentials
-              - Z-Client-Timezone          
+          cors: true         
           documentation:
             summary: Delete an item
             description: Delete an item
-            requestModels:
-              'application/json': TodoItem                 
     iamRoleStatements:
       - Effect: Allow
         Action:
+          - dynamodb:Query
+          - dynamodb:GetItem      
+          - dynamodb:UpdateItem      
+          - dynamodb:PutItem             
           - dynamodb:DeleteItem
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
 
-  # TODO: Configure this function
   GenerateUploadUrl:
     handler: src/lambda/http/generateUploadUrl.handler
     events:
       - http:
           method: post
           path: todos/{todoId}/attachment
-          cors: 
-            origin: '*'
-            headers:
-              - Access-Control-Allow-Credentials
-              - Z-Client-Timezone  
-          reqValidatorName: RequestBodyValidator
+          cors: true    
           documentation:
             summary: Generate a Upload URL
             description: Generate a Upload URL
-            requestModels:
-              'application/json': TodoItem                 
-
     iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:UpdateItem      
+          - dynamodb:PutItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+      - Effect: Allow
+        Action:
+          - dynamodb:UpdateItem      
+          - dynamodb:PutItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.IMAGES_TABLE} 
       - Effect: Allow
         Action:
           - s3:PutObject

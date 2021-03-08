@@ -14,7 +14,7 @@ export class TodoAccess {
   constructor(
     // private readonly docClient: DocumentClient = new AWS.DynamoDB.DocumentClient(),
     private readonly docClient: DocumentClient = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'}),
-    private readonly dbclient = new AWS.DynamoDB({ region: "us-west-2" }),
+    // private readonly dbclient = new AWS.DynamoDB({ region: "us-west-2" }),
     private readonly todosTable = process.env.TODOS_TABLE,
     private readonly todosUserIdIndex = process.env.TODOS_USER_ID_INDEX
   ) {}
@@ -37,20 +37,21 @@ export class TodoAccess {
   }
 
   async getTodo(todoItem: TodoItem): Promise<TodoItem> {
-    logger.info('getTodo todoItem" ', todoItem)
+    logger.info('getTodo todoItem: ', todoItem)
 
     const param = {
       TableName: this.todosTable,
       Key: { 
-        userId: todoItem.userId  , 
+        userId: todoItem.userId, 
         todoId: todoItem.todoId 
       }
     }
+    logger.info('getTodo param: ', param)
 
-    const result = await this.docClient.get(param)
+    const result = await this.docClient.get(param).promise();
     logger.info('getTodo result: ', result)
 
-    return todoItem as TodoItem
+    return result as unknown as TodoItem
   }
 
   async createTodo(todoItem: TodoItem): Promise<TodoItem> {
@@ -91,67 +92,67 @@ export class TodoAccess {
     return result as unknown as TodoUpdate
   }
 
-  async deleteTodo(todoItem: TodoDelete): Promise<TodoDelete> {
-    let result: any
-    logger.info('deleteTodo', { todoItem})
+  // async deleteTodo(todoItem: TodoDelete): Promise<TodoDelete> {
+  //   let result: any
+  //   logger.info('deleteTodo', { todoItem})
 
-    const params = {
-      TableName: this.todosTable,
-      Key: { 
-        userId: { S: todoItem.userId } , 
-        todoId: { S: todoItem.todoId }
-      },
-      ReturnValues: "ALL_OLD"  
-    }
-    logger.info('deleteTodo params',  { params } )
+  //   const params = {
+  //     TableName: this.todosTable,
+  //     Key: { 
+  //       userId: { S: todoItem.userId } , 
+  //       todoId: { S: todoItem.todoId }
+  //     },
+  //     ReturnValues: "ALL_OLD"  
+  //   }
+  //   logger.info('deleteTodo params',  { params } )
 
-    try {
-      result = await this.dbclient.deleteItem(params)
-      logger.info('deleteTodo result: ',result)  
-    } catch (err) {
-      console.error(err)
-    }          
-      // try {
-    //   logger.info('deleteTodo about to execute')      
-    //   result = await this.docClient.delete(params).promise();
-    //   // result = await this.docClient.delete(params);      
-    //   logger.info('deleteTodo result: ',result)        
-    // } catch(err) {
-    //   logger.error('deleteTodo Unable to delete item. Error JSON:',err)
-    //   console.error("deleteTodo Unable to delete item. Error JSON:", err);
-    // }
+  //   try {
+  //     result = await this.dbclient.deleteItem(params)
+  //     logger.info('deleteTodo result: ',result)  
+  //   } catch (err) {
+  //     console.error(err)
+  //   }          
+  //     // try {
+  //   //   logger.info('deleteTodo about to execute')      
+  //   //   result = await this.docClient.delete(params).promise();
+  //   //   // result = await this.docClient.delete(params);      
+  //   //   logger.info('deleteTodo result: ',result)        
+  //   // } catch(err) {
+  //   //   logger.error('deleteTodo Unable to delete item. Error JSON:',err)
+  //   //   console.error("deleteTodo Unable to delete item. Error JSON:", err);
+  //   // }
 
-    return result as unknown as TodoDelete
+  //   return result as unknown as TodoDelete
+  // }
+
+
+async deleteTodo(todoItem: TodoDelete): Promise<TodoDelete> {
+  logger.info('deleteTodo', { todoItem})
+
+  const params = {
+    TableName: this.todosTable,
+    Key: { 
+      userId: todoItem.userId , 
+      todoId: todoItem.todoId 
+    },
+    ReturnValues: "ALL_OLD"  
   }
+  logger.info('deleteTodo params',  { params } )
 
+  const result = await this.docClient.delete(params).promise()
+  logger.info('deleteTodo result: ',result)        
+  // try {
+  //   logger.info('deleteTodo about to execute')      
+  //   result = await this.docClient.delete(params).promise();
+  //   // result = await this.docClient.delete(params);      
+  //   logger.info('deleteTodo result: ',result)        
+  // } catch(err) {
+  //   logger.error('deleteTodo Unable to delete item. Error JSON:',err)
+  //   console.error("deleteTodo Unable to delete item. Error JSON:", err);
+  // }
 
-// async deleteTodo(todoItem: TodoDelete): Promise<TodoDelete> {
-//   logger.info('deleteTodo', { todoItem})
-
-//   const params = {
-//     TableName: this.todosTable,
-//     Key: { 
-//       userId: todoItem.userId , 
-//       todoId: todoItem.todoId 
-//     },
-//     ReturnValues: "ALL_OLD"  
-//   }
-//   logger.info('deleteTodo params',  { params } )
-
-//   const result = await this.docClient.delete(params).promise()
-//   logger.info('deleteTodo result: ',result)        
-//   // try {
-//   //   logger.info('deleteTodo about to execute')      
-//   //   result = await this.docClient.delete(params).promise();
-//   //   // result = await this.docClient.delete(params);      
-//   //   logger.info('deleteTodo result: ',result)        
-//   // } catch(err) {
-//   //   logger.error('deleteTodo Unable to delete item. Error JSON:',err)
-//   //   console.error("deleteTodo Unable to delete item. Error JSON:", err);
-//   // }
-
-//   return result as unknown as TodoDelete
-// }
+  return result as unknown as TodoDelete
+}
 
 
 }

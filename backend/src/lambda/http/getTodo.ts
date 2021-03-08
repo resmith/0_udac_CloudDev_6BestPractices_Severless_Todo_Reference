@@ -5,7 +5,7 @@ import { createLogger } from  "../../utils/logger"
 import { getUserId } from '../utils'
 import { getTodo } from '../../businessLogic/todos'
 
-const logger = createLogger('backend/src/lambda/http/getTodo')
+const logger = createLogger('lambda/http/getTodo')
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   // TODO: Get all TODO items for a current user
@@ -14,7 +14,11 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
   const userId: string  = getUserId(event)
   logger.info("handler userId:", { userId })
 
-  const todos = await getTodo(userId)
+  const todoId: string = event.pathParameters.todoId;
+
+  const todoItem = { userId, todoId}
+
+  const todos = await getTodo(todoItem)
   logger.info("handler todos:", { todos })  
 
   return {

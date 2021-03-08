@@ -17,8 +17,8 @@ export async function getAllTodos(userId): Promise<TodoItem[]> {
   return todoAccess.getAllTodos(userId)
 }
 
-export async function getTodo(userId): Promise<TodoItem> {
-  return todoAccess.getTodo(userId)
+export async function getTodo(todoItem): Promise<TodoItem> {
+  return todoAccess.getTodo(todoItem)
 }
 
 export async function createTodo(

@@ -37,7 +37,7 @@ export async function createTodo(
     console.log('createTodo response:', response)  
   }
 
-  return response.data.item
+  return response.data.newItem
 }
 
 export async function patchTodo(

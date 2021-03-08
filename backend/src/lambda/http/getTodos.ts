@@ -9,13 +9,13 @@ const logger = createLogger('getTodos')
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   // TODO: Get all TODO items for a current user
-  logger.info("backend/src/lambda/http/getTodos ", { event })  
+  logger.info("lambda/http/getTodos ", { event })  
   
   const userId: string  = getUserId(event)
-  logger.info("backend/src/lambda/http/getTodos ", { userId })
+  logger.info("lambda/http/getTodos ", { userId })
 
   const todos = await getAllTodos(userId)
-  logger.info("backend/src/lambda/http/getTodos ", { todos })  
+  logger.info("lambda/http/getTodos ", { todos })  
 
   return {
     statusCode: 201,

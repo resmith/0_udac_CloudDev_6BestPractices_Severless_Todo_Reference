@@ -11,14 +11,14 @@ const logger = createLogger('todo-access')
  * @returns a user id from a JWT token
  */
 export function getUserId(event: APIGatewayProxyEvent): string {
-  logger.info("backend/src/lambda/utils/getUserId ", { event }) 
+  logger.info("lambda/utils/getUserId ", { event }) 
 
   const authorization = event.headers.Authorization
-  logger.info("backend/src/lambda/utils/getUserId ", { authorization }) 
+  logger.info("lambda/utils/getUserId ", { authorization }) 
 
   const split = authorization.split(' ')
   const jwtToken = split[1]
-  logger.info("backend/src/lambda/utils/getUserId ", { jwtToken }) 
+  logger.info("lambda/utils/getUserId ", { jwtToken }) 
 
   return parseUserId(jwtToken)
 }
