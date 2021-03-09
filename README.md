@@ -105,6 +105,11 @@ npm install
 npm run start
 ```
 
+## Additional
+
+Postman request are located at:
+[Postman Collection](postman/UdacCloudDev-c4-Todo-Serverless-.postman_collection.json)
+
 # Technology Utilized
 
 - [Serverless Framework for infrastructure creation and code deployment](https://www.serverless.com/)
