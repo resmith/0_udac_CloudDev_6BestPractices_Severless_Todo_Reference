@@ -175,45 +175,76 @@ function getSigningKey(jwksUri: string, kid: string): string {
 
 Authorization Login
 ![Alt text](images/authorization_01.png)
+
+Console showing authentication
 ![Alt text](images/authorization_02_Blur.png)
+
+Cloudwatch logs showing Lambda authorization
 ![Alt text](images/authorization-cloudwatch_logs.png)
 
 ## AWS Components
 
+API Gateway created via Serverless Framework
 ![Alt text](images/aws_apiGateway.png)
+
+API Gateway in detail
 ![Alt text](images/aws_apiGateway_detail.png)
+
+Cloudformation stacks
 ![Alt text](images/aws_cloudFormation_Stacks.png)
+
+Cloudwatch groups
 ![Alt text](images/aws_cloudwatch_log_groups.png)
+
+DynamoDb Tables
 ![Alt text](images/aws_dynamoDb_tables.png)
+
+DynamoDb - Todos Table
 ![Alt text](images/aws_dynamoDb_table_Todos-dev.png)
+
+DynamoDb - Images Table
 ![Alt text](images/aws_dynamoDb_table_Todos-Images-dev.png)
+
+
+Lambda Apps
 ![Alt text](images/aws_lambda_application.png)
 ![Alt text](images/aws_lambda_application_02.png)
 
 ## Create ToDos
-
+Create a Todo via App GUI
 ![Alt text](images/create_todo_01.png)
 ![Alt text](images/create_todo_02.png)
+
+Cloudwatch logs showing Todo creation
 ![Alt text](images/createTodo_Cloudwatch_logs.png)
+
+Browser Console showing Todo creation
 ![Alt text](images/create_todos_client_console_state.png)
 
 ## Delete ToDos
-
+Cloudwatch logs showing delete of todo item 
 ![Alt text](images/delete_todos_cloudWatch_logs.png)
 
 ## Get ToDos
 
+Cloudwatch logs showing retrieval of todo item 
 ![Alt text](images/get_Todos_cloudWatch_logs.png)
 
 ## Update ToDos
 
+Cloudwatch logs showing update of todo item 
 ![Alt text](images/update_todo_cloudWatch_logs.png)
+
+Browser console showing update of todo item 
 ![Alt text](images/update_todo_postman_request_Response.png)
 
 ## Upload Image
 
+Application GUI for upload of image
 ![Alt text](images/upload_image_01.png)
 ![Alt text](images/upload_image_02.png)
+
+Cloudwatch logs showing upload of image
 ![Alt text](images/upload_image_cloudwatch_logs_01.png)
 ![Alt text](images/upload_image_cloudwatch_logs_02.png)
 
