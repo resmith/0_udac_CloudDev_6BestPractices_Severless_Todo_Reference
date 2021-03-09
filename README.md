@@ -46,17 +46,34 @@ _Note_: There are several logs written in the code. Normally these would be remo
 
 ## Installation
 
+### Configuration
+
+1. Get an Auth0 Account and create an application for it
+2. Copy the certificate to backend/secret.pem
+   The certificate should begin with '-----BEGIN CERTIFICATE-----' and end with '-----END CERTIFICATE-----'
+3. Update in backend/serverless.yml the S3 bucket name (IMAGES_S3_BUCKET). This is the only asset that is global, meaning it must be unique for all of S3, just not your account.
+
 ### Backend
 
 Ensure that npm and node are already installed as a prerequisite. It's recommended to use NVM for easier management of node versions.
 
 Then deploy the severless framework:
 
-```
+```sh
+# Clone the Repo
 git clone repo <thisRepo>
 cd <clonedDirectory>
 cd backend
+
+# install npm modules
 npm install
+
+# deploy infrastructure, S3 and DynamoDb
+cd infrastructure
+sls deploy -v
+
+# deploy the back-end code - api gateway & lambda
+cd ..
 sls deploy -v
 ```
 
@@ -205,12 +222,12 @@ DynamoDb - Todos Table
 DynamoDb - Images Table
 ![Alt text](images/aws_dynamoDb_table_Todos-Images-dev.png)
 
-
 Lambda Apps
 ![Alt text](images/aws_lambda_application.png)
 ![Alt text](images/aws_lambda_application_02.png)
 
 ## Create ToDos
+
 Create a Todo via App GUI
 ![Alt text](images/create_todo_01.png)
 ![Alt text](images/create_todo_02.png)
@@ -222,20 +239,21 @@ Browser Console showing Todo creation
 ![Alt text](images/create_todos_client_console_state.png)
 
 ## Delete ToDos
-Cloudwatch logs showing delete of todo item 
+
+Cloudwatch logs showing delete of todo item
 ![Alt text](images/delete_todos_cloudWatch_logs.png)
 
 ## Get ToDos
 
-Cloudwatch logs showing retrieval of todo item 
+Cloudwatch logs showing retrieval of todo item
 ![Alt text](images/get_Todos_cloudWatch_logs.png)
 
 ## Update ToDos
 
-Cloudwatch logs showing update of todo item 
+Cloudwatch logs showing update of todo item
 ![Alt text](images/update_todo_cloudWatch_logs.png)
 
-Browser console showing update of todo item 
+Browser console showing update of todo item
 ![Alt text](images/update_todo_postman_request_Response.png)
 
 ## Upload Image

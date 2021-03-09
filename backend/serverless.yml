@@ -59,8 +59,7 @@ custom:
         description: Serverless application for images sharing
       contact:
         name: "Robert Smith"
-        url: "http://www.example.com/me"
-        email: "js@example.com"
+        url: "http://github.com/resmith"
       tags:
         -
           name: "Serverless"
