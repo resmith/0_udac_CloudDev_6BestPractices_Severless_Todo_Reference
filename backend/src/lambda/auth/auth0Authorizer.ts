@@ -14,13 +14,15 @@ const logger = createLogger('auth0Authorizer')
 export const handler = async (
   event: CustomAuthorizerEvent
 ): Promise<CustomAuthorizerResult> => {
-  logger.info('handler ', event.authorizationToken)
+  logger.info('handler event.authorizationToken:', event.authorizationToken)
   try {
 
     // const jwtToken = await verifyToken(event.authorizationToken,jwksUrl )
     const signingKey = process.env.AUTH0_PUBLIC_KEY;
+    logger.info('handler signingKey: ', signingKey)
+
     const jwtTokenPayload = await verifyToken(event.authorizationToken, signingKey)
-    logger.info('handler b4 return', jwtTokenPayload)
+    logger.info('handler b4 return jwtTokenPayload: ', jwtTokenPayload)
 
     return {
       principalId: jwtTokenPayload.sub,
@@ -55,7 +57,7 @@ export const handler = async (
 
 
 function getToken(authHeader: string): string {
-  logger.info("getToken", { authHeader });
+  logger.info("getToken authHeader:", { authHeader });
 
   if (!authHeader) {
     logger.info("getToken No authentication header ", {authHeader})
@@ -69,17 +71,17 @@ function getToken(authHeader: string): string {
 
   const split = authHeader.split(' ')
   const token = split[1]
-  logger.info("getToken returning ", {token})
+  logger.info("getToken returning token:", {token})
 
   return token
 }
 
 
 async function verifyToken(authHeader: string, signingKey: string): Promise<JwtPayload> {
-  logger.info("verifyToken", { authHeader } );
+  logger.info("verifyToken authHeader", { authHeader } );
 
   const token = getToken(authHeader)
-  logger.info("verifyToken", { token });
+  logger.info("verifyToken token:", { token });
 
   const jwt: Jwt = decode(token, { complete: true }) as Jwt
   logger.info("verifyToken", { jwt } );
@@ -89,13 +91,13 @@ async function verifyToken(authHeader: string, signingKey: string): Promise<JwtP
   }
 
   const jwtHeaderKid = jwt.header.kid
-  logger.info("verifyToken", {jwtHeaderKid})
+  logger.info("verifyToken jwtHeaderKid:", {jwtHeaderKid})
 
   // const signingKey: string = getSigningKey(jwksUrl, jwtHeaderKid)
-  logger.info("verifyToken ", {signingKey})  
+  logger.info("verifyToken signingKey:", {signingKey})  
 
   const jwtPayload: JwtPayload = verify(token, signingKey) as JwtPayload;
-  logger.info("verifyToken ", {jwtPayload})    
+  logger.info("verifyToken returning jwtPayload:", {jwtPayload})    
 
   return jwtPayload    
 

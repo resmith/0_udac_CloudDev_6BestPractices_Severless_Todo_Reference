@@ -196,7 +196,7 @@ functions:
             description: Generate a Upload URL
     iamRoleStatements:
       - Effect: Allow
-        Action:
+        Action: 
           - dynamodb:UpdateItem      
           - dynamodb:PutItem
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}

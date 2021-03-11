@@ -5,7 +5,7 @@ service:
 plugins:
   - serverless-aws-documentation
   - serverless-iam-roles-per-function
-  - serverless-dynamodb-local
+  # - serverless-dynamodb-local
   # - serverless-offline
   # - serverless-dotenv-plugin # Load .env as environment variables
 
@@ -99,14 +99,14 @@ resources:
       Type: "AWS::DynamoDB::Table"
       Properties:
         AttributeDefinitions:
-          - AttributeName: todoId
+          - AttributeName: userId
             AttributeType: S
           - AttributeName: imageId
             AttributeType: S
         KeySchema:
-          - AttributeName: imageId
+          - AttributeName: userId
             KeyType: HASH
-          - AttributeName: todoId
+          - AttributeName: imageId
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
         TableName: ${self:provider.environment.IMAGES_TABLE}

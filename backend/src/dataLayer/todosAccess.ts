@@ -1,4 +1,5 @@
 import * as AWS  from 'aws-sdk'
+import * as AWSXRay from 'aws-xray-sdk'
 import { DocumentClient } from 'aws-sdk/clients/dynamodb'
 import {createLogger} from '../utils/logger'
 
@@ -6,14 +7,14 @@ import { TodoItem } from '../models/TodoItem'
 import { TodoUpdate } from '../models/TodoUpdate'
 import { TodoDelete } from '../models/TodoDelete'
 
-
+const XAWS = AWSXRay.captureAWS(AWS)
 const logger = createLogger('datalayer/todosAccess')
 
 export class TodoAccess {
 
   constructor(
     // private readonly docClient: DocumentClient = new AWS.DynamoDB.DocumentClient(),
-    private readonly docClient: DocumentClient = new AWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'}),
+    private readonly docClient: DocumentClient = new XAWS.DynamoDB.DocumentClient({apiVersion: '2012-08-10'}),
     // private readonly dbclient = new AWS.DynamoDB({ region: "us-west-2" }),
     private readonly todosTable = process.env.TODOS_TABLE,
     private readonly todosUserIdIndex = process.env.TODOS_USER_ID_INDEX
@@ -153,6 +154,7 @@ async deleteTodo(todoItem: TodoDelete): Promise<TodoDelete> {
 
   return result as unknown as TodoDelete
 }
+
 
 
 }

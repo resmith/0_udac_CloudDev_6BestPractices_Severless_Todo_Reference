@@ -69,15 +69,21 @@ export async function getUploadUrl(
   idToken: string,
   todoId: string
 ): Promise<string> {
+  console.log("api/todos-api/getUploadUrl idToken: ", idToken)
+  console.log("api/todos-api/getUploadUrl todoId: ", todoId)
   const response = await Axios.post(`${apiEndpoint}/todos/${todoId}/attachment`, '', {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${idToken}`
     }
   })
+  console.log("api/todos-api/getUploadUrl response.data.uploadUrl: ", response.data.uploadUrl)
+  console.log("api/todos-api/getUploadUrl response: ", response)
   return response.data.uploadUrl
 }
 
 export async function uploadFile(uploadUrl: string, file: Buffer): Promise<void> {
+  console.log("api/todos-api/getUploadUrl uploadUrl: ", uploadUrl)
+  console.log("api/todos-api/getUploadUrl file: ", file)    
   await Axios.put(uploadUrl, file)
 }
